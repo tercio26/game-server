@@ -1,0 +1,16 @@
+{
+    "invalid_data": "無効なデータ",
+    "validation": {
+        "request": {
+            "empty": "リクエストは空であってはなりません",
+            "invalid": "無効な「{targetName}」です"
+        },
+        "range_length": "'{targetName}' must be between {minLength} and {maxLength} characters.",
+        "required": "{targetName} is required",
+        "min_max": "最大値を最小値より大きく入力してください"
+    },
+    "login": {
+        "invalid_email": "メールが無効です",
+        "invalid_password": "パスワードが無効です"
+    }
+}

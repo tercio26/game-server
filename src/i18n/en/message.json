@@ -1,0 +1,15 @@
+{
+    "invalid_data": "Invalid data",
+    "validation": {
+        "request": {
+            "empty": "Request should not be empty",
+            "invalid": "Invalid '{targetName}'"
+        },
+        "range_length": "'{targetName}' must be between {minLength} and {maxLength} characters.",
+        "required": "{targetName} is required"
+    },
+    "login": {
+        "invalid_email": "Email is invalid",
+        "invalid_password": "Password is invalid."
+    }
+}

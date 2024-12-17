@@ -1,0 +1,112 @@
+x-variable:
+  documentRoot: &documentRoot "/app"
+
+services:
+  dreamers.backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    user: "node"
+    container_name: dreamers.backend
+    working_dir: *documentRoot
+    ports:
+      - 5000:5000
+    expose:
+      - 5000
+    volumes:
+      - .:/app
+    command: sh -c "npm install && npm run start:dev"
+    networks:
+      - dreamers
+
+  dreamers.mysql:
+    container_name: dreamers.mysql
+    restart: always
+    image: mysql:8.4
+    ports:
+      - 5306:3306
+    expose:
+      - 3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=db_dreamers
+      - MYSQL_USER=admin
+      - MYSQL_PASSWORD=password
+    volumes:
+      - ./build/database:/var/lib/mysql
+    networks:
+      - dreamers
+
+  dreamers.phpmyadmin:
+    container_name: dreamers.phpmyadmin
+    restart: always
+    image: phpmyadmin/phpmyadmin:latest
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - PMA_USER=admin
+      - PMA_PASSWORD=password
+    ports:
+      - 5580:80
+    links:
+      - dreamers.mysql:db
+    depends_on:
+      - dreamers.mysql
+    networks:
+      - dreamers
+
+  dreamers.mailhog:
+    container_name: dreamers.mailhog
+    image: mailhog/mailhog
+    logging:
+      driver: 'none'  # disable saving logs
+    ports:
+      - 5125:1025 # smtp server
+      - 5825:8025 # web ui
+    networks:
+      - dreamers
+
+#    dreamers.search-engine:
+#        image: docker.elastic.co/elasticsearch/elasticsearch:8.10.1
+#            container_name: elasticsearch
+#            environment:
+#                - discovery.type=single-node
+#                - xpack.security.enabled=false
+#                - ES_JAVA_OPTS=-Xms512m -Xmx512m
+#            volumes:
+#                - es_data:/usr/share/elasticsearch/data
+#            ports:
+#                - "9200:9200"
+#                - "9300:9300"
+#            networks:
+#                - elastic
+#
+#        build:
+#            context: .
+#            dockerfile: api.Dockerfile
+#        user: "node"
+#        container_name: dreamers.search-engine
+#        working_dir: *documentRoot
+#        ports:
+#            - "6004:6004"
+#        expose:
+#            - 6004
+#        volumes:
+#            - ./search-engine/:/app
+#        command: sh -c "npm install && npm run start"
+#        networks:
+#            - dreamers
+#
+#    dreamers.redis:
+#        image: redis:latest
+#        container_name: dreamers.redis
+#        ports:
+#            - "6379:6379"
+#        networks:
+#            - dreamers
+
+volumes:
+  db-data:
+    external: false
+
+networks:
+  dreamers:
