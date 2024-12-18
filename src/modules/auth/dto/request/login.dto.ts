@@ -1,29 +1,37 @@
-import { IsString, IsNotEmpty, MinLength, MaxLength, IsEmail, IsBoolean } from 'class-validator'
-import { ExtLength } from '../../../../libraries/decorators/validation/length-validation.decorator'
-import { ApiProperty } from '@nestjs/swagger'
+import { IsString, IsNotEmpty, MinLength, MaxLength, IsEmail, IsBoolean, ValidateIf, Length } from 'class-validator'
 import { Optional } from '@nestjs/common';
 import { UserProvider } from '../../../../libraries/enum/user.enum';
 
 export class LoginRequest {
-	@ApiProperty()
-	@ExtLength(1, 50)
-	@Optional()
+	provider: UserProvider
+
+	@ValidateIf(o => [UserProvider.LOCAL].includes(o.provider))
+	@IsNotEmpty()
 	@IsEmail()
 	email: string
 
-	@ApiProperty()
-	@Optional()
+	@ValidateIf(o => o.provider === UserProvider.LOCAL)
+	@IsNotEmpty()
 	@MinLength(8)
 	@MaxLength(20)
 	@IsString()
 	password: string
 
-	@ApiProperty()
-	@Optional()
-	@IsBoolean()
-	isRemember: boolean
+	@ValidateIf(o => [UserProvider.GOOGLE].includes(o.provider))
+	@IsNotEmpty()
+	@Length(21)
+	@IsString()
+	providerId: string
 
-	@ApiProperty()
+	@ValidateIf(o => [UserProvider.GOOGLE].includes(o.provider))
+	@IsNotEmpty()
+	@IsString()
+	name: string
+
+	@ValidateIf(o => [UserProvider.GOOGLE].includes(o.provider))
 	@Optional()
-	provider: UserProvider
+	@IsString()
+	avatarPath: string
+
+
 }

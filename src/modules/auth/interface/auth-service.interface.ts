@@ -6,5 +6,7 @@ import { RegisterRequest } from '../dto/request/register.dto';
 export interface IAuthService {
     register(request: RegisterRequest): Promise<User>
 
-    login(credential: LoginRequest): Promise<LoginDto>
+    loginGoogle(request: LoginRequest): Promise<LoginDto>
+
+    loginLocal(credential: LoginRequest): Promise<LoginDto>
 }

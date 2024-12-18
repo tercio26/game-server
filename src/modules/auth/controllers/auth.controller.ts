@@ -1,48 +1,40 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
-import { PublicApi } from '../../../libraries/decorators/open-api/public.decorator';
-import { AuthFacade } from '../facades/auth.facade';
-import { LoginRequest } from '../dto/request/login.dto';
-import { LoginDto } from '../dto/response/login.dto';
-import { RegisterRequest } from '../dto/request/register.dto';
-import { UserDto } from '../dto/response/user.dto';
-import { AuthGuard } from '@nestjs/passport';
-import { UserProvider } from '../../../libraries/enum/user.enum';
+import { Body, Controller, Get, Post, Request, UseGuards } from '@nestjs/common'
+import { PublicApi } from '../../../libraries/decorators/open-api/public.decorator'
+import { AuthFacade } from '../facades/auth.facade'
+import { LoginRequest } from '../dto/request/login.dto'
+import { LoginDto } from '../dto/response/login.dto'
+import { RegisterRequest } from '../dto/request/register.dto'
+import { UserDto } from '../dto/response/user.dto'
+import { GoogleOAuthGuard } from '../guard/google-oauth.guard'
 
 @Controller('auth')
 export class AuthController {
-	constructor(private authFacade: AuthFacade) {
-	}
+    constructor(private authFacade: AuthFacade) {
+    }
 
-	@PublicApi()
-	@Post('register')
-	async register(@Body() request: RegisterRequest): Promise<UserDto> {
-		return await this.authFacade.register(request);
-	}
+    @PublicApi()
+    @Post('register')
+    async register(@Body() request: RegisterRequest): Promise<UserDto> {
+        return await this.authFacade.register(request)
+    }
 
-	@PublicApi()
-	@Post('login')
-	async login(@Body() request: LoginRequest): Promise<LoginDto> {
-		return await this.authFacade.login(request);
-	}
+    @PublicApi()
+    @Post('login')
+    async login(@Body() request: LoginRequest): Promise<LoginDto> {
+        return await this.authFacade.login(request)
+    }
 
-	@PublicApi()
-	@Get('google')
-	@UseGuards(AuthGuard('google'))
-	async googleAuth(@Req() req) {
-	}
+    @PublicApi()
+    @Get('google')
+    @UseGuards(GoogleOAuthGuard)
+    async googleAuth(): Promise<void> {
+        // Redirect to google by GoogleOAuthGuard
+    }
 
-	@PublicApi()
-	@Get('google/redirect')
-	@UseGuards(AuthGuard('google'))
-	googleAuthRedirect(@Req() req) {
-		req['provider'] = UserProvider.GOOGLE
-		return this.authFacade.login(req);
-	}
-
-	@PublicApi()
-	@Get('google/callback')
-	@UseGuards(AuthGuard('google'))
-	googleLoginCallback(@Req() req) {
-		return this.authFacade.login(req.user);
-	}
+    @PublicApi()
+    @Get('google/callback')
+    @UseGuards(GoogleOAuthGuard)
+    googleLoginCallback(@Request() request: any) {
+        return this.authFacade.login(request.user)
+    }
 }

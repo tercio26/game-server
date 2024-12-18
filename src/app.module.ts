@@ -5,8 +5,8 @@ import configuration from './config/config.service';
 import { AuthModule } from './modules/auth/auth.module';
 import { DatabaseModule } from './config/database/database.module';
 import { I18nConfigModule } from './config/i18n/i18n-config.module';
-import { AuthGuard } from './libraries/guard/jwt-auth/jwt-auth.guard';
 import { BaseModule } from './modules/base/base.module';
+import { AuthGuard } from './modules/auth/guard/jwt-auth.guard';
 
 @Module({
 	imports: [
