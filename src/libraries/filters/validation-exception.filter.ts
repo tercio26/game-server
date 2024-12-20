@@ -15,6 +15,7 @@ export class ValidationExceptionFilter implements ExceptionFilter {
         const errorResponse = ResponseFactory.error(
             ErrorCodeEnum.REQUEST_VALIDATION_ERROR,
             this.extractErrorMessage(exceptionResponse),
+            this.extractErrors(exceptionResponse),
         )
         response.status(status).json(errorResponse)
     }
@@ -26,8 +27,6 @@ export class ValidationExceptionFilter implements ExceptionFilter {
      * @returns
      */
     extractErrorMessage(exceptionResponse: any): string {
-        let messages: string[] = []
-
         // If the exception response is not an object or does not have a message key
         if (typeof exceptionResponse != 'object' || !exceptionResponse['message']) {
             return ''
@@ -37,22 +36,52 @@ export class ValidationExceptionFilter implements ExceptionFilter {
             return exceptionResponse['message']
         }
 
-        const extractMessagesFromErrors = (errors: any[]): string[] => {
-            return errors.flatMap((error) => {
-                if (typeof error === 'string') {
-                    return error
-                } else if (typeof error === 'object') {
-                    if (error.constraints) {
-                        // Extract the error messages from the constraints.
-                        return Object.values(error.constraints)
-                    } else {
-                        return extractMessagesFromErrors(error.children)
-                    }
+        const messages = this.extractMessagesFromErrors(exceptionResponse['message'])
+        return messages.join(', ')
+    }
+
+    /**
+     * Extract detailed errors from the exception response
+     *
+     * @param exceptionResponse
+     * @returns
+     */
+    extractErrors(exceptionResponse: any): Record<string, string[]> {
+        const errors: Record<string, string[]> = {}
+
+        if (typeof exceptionResponse != 'object' || !exceptionResponse['message']) {
+            return errors
+        }
+
+        if (Array.isArray(exceptionResponse['message'])) {
+            exceptionResponse['message'].forEach((error: any) => {
+                if (typeof error === 'object' && error.property && error.constraints) {
+                    errors[error.property] = Object.values(error.constraints)
                 }
-                return []
             })
         }
-        messages = extractMessagesFromErrors(exceptionResponse['message'])
-        return messages.join(', ')
+
+        return errors
+    }
+
+    /**
+     * Extract messages from errors
+     *
+     * @param errors
+     * @returns
+     */
+    extractMessagesFromErrors(errors: any[]): string[] {
+        return errors.flatMap((error) => {
+            if (typeof error === 'string') {
+                return error
+            } else if (typeof error === 'object') {
+                if (error.constraints) {
+                    return Object.values(error.constraints)
+                } else {
+                    return this.extractMessagesFromErrors(error.children)
+                }
+            }
+            return []
+        })
     }
 }

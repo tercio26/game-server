@@ -20,3 +20,19 @@ export const Variable = {
     IMAGE_ACCEPT_TYPES: /image\/(jpeg|jpg|png)/,
     COLLATE: 'utf8mb4_general_ci',
 }
+
+export enum Guard {
+    LOCAL = 'local',
+    JWT = 'JWT',
+    GOOGLE = 'GOOGLE',
+    FACEBOOK = 'FACEBOOK',
+    APPLE = 'APPLE',
+}
+
+export enum GameStatus {
+    INACTIVE = 0,
+    DEVELOPING = 1,
+    OPEN_BETA = 2,
+    OFFICIAL_RELEASE = 3,
+    CLOSED_BETA = 4,
+}

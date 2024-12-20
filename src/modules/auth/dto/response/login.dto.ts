@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { Expose, Exclude } from 'class-transformer'
-import { UserDto } from './user.dto'
+import { AccountDto } from './account.dto'
 
 @Exclude()
 export class LoginDto {
@@ -10,5 +10,5 @@ export class LoginDto {
 
 	@Expose()
 	@ApiProperty()
-	userInfo: UserDto
+	accountInfo: AccountDto
 }

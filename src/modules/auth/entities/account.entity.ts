@@ -1,16 +1,13 @@
 import { Column, DeleteDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm'
-import { UserStatus, UserProvider } from '../../../libraries/enum/user.enum'
+import { AccountStatus, AccountProvider } from '../../../libraries/enum/account.enum'
 
-/**
- * Users entity
- */
 @Entity()
-export class User {
-	@PrimaryGeneratedColumn({ name: 'user_id' })
-	userId: number
+export class AccountEntity {
+	@PrimaryGeneratedColumn({ name: 'account_id' })
+	accountId: number
 
-	@Column({ name: 'name', nullable: true })
-	name: string
+	@Column({ name: 'username', nullable: true })
+	username: string
 
 	@Column({ name: 'avatar_path', nullable: true })
 	avatarPath: string
@@ -22,22 +19,13 @@ export class User {
 	password: string
 
 	@Column({ nullable: true })
-	provider: UserProvider
+	provider: AccountProvider
 
 	@Column({ name: 'provider_id', nullable: true })
 	providerId: string // ThirdParty ID
 
 	@Column()
-	status: UserStatus
-
-	@Column({ nullable: true })
-	token: string
-
-	@Column({ name: 'remember_token' })
-	rememberToken: string
-
-	@Column({ name: 'token_expired_at' })
-	tokenExpiredAt: Date
+	status: AccountStatus
 
 	@Column({ type: 'datetime', name: 'created_at' })
 	createdAt: Date

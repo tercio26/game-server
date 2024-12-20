@@ -1,7 +1,7 @@
 import { PassportStrategy } from '@nestjs/passport'
 import { Injectable } from '@nestjs/common'
 import { config } from 'dotenv'
-import { Strategy, VerifyCallback, Profile } from 'passport-google-oauth20'
+import { Profile, Strategy } from 'passport-facebook'
 import { AccountProvider } from '../../../libraries/enum/account.enum'
 import { LoginRequest } from '../dto/request/login.dto'
 import { Guard } from '../../../libraries/enum/enums'
@@ -9,13 +9,14 @@ import { Guard } from '../../../libraries/enum/enums'
 config()
 
 @Injectable()
-export class GoogleStrategy extends PassportStrategy(Strategy, Guard.GOOGLE) {
+export class FacebookStrategy extends PassportStrategy(Strategy, Guard.FACEBOOK) {
     constructor() {
         super({
-            clientID: process.env.GOOGLE_CLIENT_ID,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-            callbackURL: process.env.GOOGLE_CALLBACK_URL,
+            clientID: process.env.FACEBOOK_APP_ID,
+            clientSecret: process.env.FACEBOOK_APP_SECRET,
+            callbackURL: process.env.FACEBOOK_CALLBACK_URL,
             scope: ['email', 'profile'],
+            profileFields: ["emails", "name"],
             passReqToCallback: true,
         })
     }
@@ -25,12 +26,12 @@ export class GoogleStrategy extends PassportStrategy(Strategy, Guard.GOOGLE) {
         accessToken: string,
         refreshToken: string,
         profile: Profile,
-        done: VerifyCallback,
+        done: (err: any, user: any, info?: any) => void,
     ): Promise<void> {
         const { id, displayName, emails, photos } = profile
         const user = {
             email: emails[0].value,
-            provider: AccountProvider.GOOGLE,
+            provider: AccountProvider.FACEBOOK,
             providerId: id,
             name: displayName,
             avatarPath: photos[0].value,

@@ -1,31 +1,51 @@
-import { Module } from '@nestjs/common';
-import { AuthService } from './services/auth.service';
-import { AuthFacade } from './facades/auth.facade';
-import { AuthController } from './controllers/auth.controller';
-import { APP_GUARD } from '@nestjs/core';
-import { JwtConfigModule } from '../../config/jwt/jwt-config.module';
-import { UserRepository } from './repositories/user.repository';
-import { BcryptService } from '../../libraries/services/bcrypt.service';
-import { I18nTranslateService } from '../../libraries/services/i18n-translate.service';
-import { GoogleStrategy } from './strategies/google.strategy';
-import { RoleGuard } from './guard/role.guard';
+import { Module } from '@nestjs/common'
+import { PassportModule } from '@nestjs/passport'
+import { JwtModule } from '@nestjs/jwt'
+
+import { GoogleStrategy } from './strategies/google.strategy'
+import { FacebookStrategy } from './strategies/facebook.strategy'
+import { LocalStrategy } from './strategies/local.strategy'
+import { JwtStrategy } from './strategies/jwt.strategy'
+
+import { AuthController } from './controllers/auth.controller'
+
+import { IAuthFacadeToken } from './interfaces/auth-facade.interface'
+import { AuthFacade } from './facades/auth.facade'
+
+import { I18nTranslateService } from '../../libraries/services/i18n-translate.service'
+import { IAuthServiceToken } from './interfaces/auth-service.interface'
+import { AuthService } from './services/auth.service'
+import { BcryptService } from '../../libraries/services/bcrypt.service'
+
+import { AccountRepository } from './repositories/account.repository'
 
 @Module({
-  imports: [
-    JwtConfigModule,
-  ],
-  providers: [
-    { provide: APP_GUARD, useClass: RoleGuard },
+    imports: [
+        PassportModule,
+        JwtModule.register({
+            global: true,
+            secret: process.env.JWT_SECRET_KEY,
+            signOptions: {
+                expiresIn: `${process.env.JWT_ACCESS_TOKEN_EXPIRE_TIME}s`,
+            },
+        }),
+    ],
+    providers: [
+        I18nTranslateService,
+        BcryptService,
 
-    I18nTranslateService,
-    BcryptService,
-    AuthService,
-    AuthFacade,
-    UserRepository,
+        GoogleStrategy,
+        FacebookStrategy,
+        LocalStrategy,
+        JwtStrategy,
 
-    GoogleStrategy,
-  ],
-  controllers: [AuthController],
+        { provide: IAuthFacadeToken, useClass: AuthFacade },
+
+        { provide: IAuthServiceToken, useClass: AuthService },
+
+        AccountRepository,
+    ],
+    controllers: [AuthController],
 })
 export class AuthModule {
 }

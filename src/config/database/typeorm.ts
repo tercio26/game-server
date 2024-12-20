@@ -13,7 +13,7 @@ const config = {
     database: process.env.DB_NAME,
     entities: [__dirname + '/../../**/*.entity{.ts,.js}'], // Load all entities from the entities folder
     migrations: [__dirname + '/../../migrations/*{.ts,.js}'],
-    migrationsTableName: 'nest_migrations',
+    migrationsTableName: 'migrations',
     charset: 'utf8mb4',
     logging: ['all', 'query'],
     logger: 'file',

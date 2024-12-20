@@ -3,82 +3,95 @@ import { plainToInstance } from 'class-transformer'
 import { InjectRepository } from '@nestjs/typeorm'
 import { JwtService } from '@nestjs/jwt'
 
-import { IAuthService } from '../interface/auth-service.interface'
-import { UserProvider } from '../../../libraries/enum/user.enum'
+import { IAuthService } from '../interfaces/auth-service.interface'
+import { AccountProvider } from '../../../libraries/enum/account.enum'
 
 import { I18nTranslateService } from '../../../libraries/services/i18n-translate.service'
 import { BcryptService } from '../../../libraries/services/bcrypt.service'
 
-import { UserRepository } from '../repositories/user.repository'
+import { AccountRepository } from '../repositories/account.repository'
 
-import { User } from '../entities/user.entity'
+import { AccountEntity } from '../entities/account.entity'
 import { LoginRequest } from '../dto/request/login.dto'
 import { RegisterRequest } from '../dto/request/register.dto'
 import { LoginDto } from '../dto/response/login.dto'
-import { UserDto } from '../dto/response/user.dto'
+import { AccountDto } from '../dto/response/account.dto'
 
 @Injectable()
 export class AuthService implements IAuthService {
-	constructor(
-		@InjectRepository(UserRepository) private userRepository: UserRepository,
-		private readonly bcryptService: BcryptService,
-		private readonly translateService: I18nTranslateService,
-		private readonly jwtService: JwtService,
-	) {
-	}
+    constructor(
+        @InjectRepository(AccountRepository) private accountRepository: AccountRepository,
+        private readonly bcryptService: BcryptService,
+        private readonly translateService: I18nTranslateService,
+        private readonly jwtService: JwtService,
+    ) {
+    }
 
-	async register(request: RegisterRequest): Promise<User> {
-		const hashedPassword = await this.bcryptService.hash(request.password)
+    async validateRegisterLocal(request: RegisterRequest): Promise<void> {
+        const account = await this.accountRepository.findOneBy({
+            email: request.email,
+        })
 
-		return this.userRepository.registerLocalUser(request.email, hashedPassword, await this._generateUserName())
-	}
+        if (account) {
+            const errorMessage = await this.translateService.translate('message.register.email_exist')
+            throw new UnauthorizedException(errorMessage)
+        }
+    }
 
-	async loginLocal(credential: LoginRequest): Promise<LoginDto> {
-		const user = await this.userRepository.findOneBy({ email: credential.email })
+    async registerLocal(request: RegisterRequest): Promise<AccountEntity> {
+        const hashedPassword = await this.bcryptService.hash(request.password)
 
-		if (user && (await this.bcryptService.compare(credential.password, user.password))) {
-			return this._loginSuccess(user)
-		}
+        return this.accountRepository.registerLocalAccount(request.email, hashedPassword)
+    }
 
-		const errorMessage = await this.translateService.translate('message.login.invalid_email')
-		throw new UnauthorizedException(errorMessage)
-	}
+    async loginLocal(credential: LoginRequest): Promise<LoginDto> {
+        const account = await this.accountRepository.findOneBy({ email: credential.email })
 
-	async loginGoogle(request: LoginRequest) {
-		console.log(request)
-		if (!request) {
-			throw new UnauthorizedException('No user from google')
-		}
-
-		let user = await this.userRepository.getUserByProvider(UserProvider.GOOGLE, request.providerId)
-		if (!user) {
-            user = await this.userRepository.registerUserByProvider(request)
+        if (account && this.bcryptService.compare(credential.password, account.password)) {
+            return this._loginSuccess(account)
         }
 
-		return this._loginSuccess(user)
-	}
+        const errorMessage = await this.translateService.translate('message.login.invalid_email')
+        throw new UnauthorizedException(errorMessage)
+    }
 
-	_loginSuccess(user: User): LoginDto {
-		const userInfo = plainToInstance(UserDto, user)
-		const accessToken = this.jwtService.sign({
-			sub: user.userId,
-			...userInfo,
-		})
+    async loginGoogle(request: LoginRequest) {
+        if (!request) {
+            throw new UnauthorizedException('No account from Google')
+        }
 
-		return plainToInstance(LoginDto, { accessToken, userInfo })
-	}
+        let account = await this.accountRepository.getAccountByProvider(AccountProvider.GOOGLE, request.providerId)
+        if (!account) {
+            account = await this.accountRepository.registerByProvider(request)
+        }
 
-	async _generateUserName(): Promise<string> {
-		const lastUser = await this.userRepository.findOne({
-			order: { userId: 'DESC' },
-		})
+        return this._loginSuccess(account)
+    }
 
-		let userId = 1
-		if (lastUser) {
-			userId = lastUser.userId + 1
-		}
+    async loginFacebook(request: LoginRequest): Promise<LoginDto> {
+        if (!request) {
+            throw new UnauthorizedException('No account from Facebook')
+        }
 
-		const formattedUserId = userId.toString().padStart(8, '0')
-		return `user${formattedUserId}`
-	}
+        let account = await this.accountRepository.getAccountByProvider(AccountProvider.FACEBOOK, request.providerId)
+        if (!account) {
+            account = await this.accountRepository.registerByProvider(request)
+        }
+
+        return this._loginSuccess(account)
+    }
+
+    async loginApple(request: LoginRequest): Promise<LoginDto> {
+        return
+    }
+
+    _loginSuccess(account: AccountEntity): LoginDto {
+        const accountInfo = plainToInstance(AccountDto, account)
+        const accessToken = this.jwtService.sign({
+            sub: account.accountId,
+            ...accountInfo,
+        })
+
+        return plainToInstance(LoginDto, { accessToken, accountInfo })
+    }
 }

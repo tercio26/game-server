@@ -68,17 +68,15 @@ export class ResponseFactory {
     }
 
     /**
-     * Create the error response with message
+     * Create the error response with message and detailed errors
      *
      * @param code
      * @param message
+     * @param errors
      * @param data
      * @returns
      */
-    static error<T>(code: string, message: string | string[], data?: T): ErrorResponse<T> {
-        if (Array.isArray(message)) {
-            message = message.join(' ')
-        }
-        return new ErrorResponse<T>(code, message, data)
+    static error<T>(code: string, message: string, errors: Record<string, string[]>, data?: T): ErrorResponse<T> {
+        return new ErrorResponse<T>(code, message, errors, data)
     }
 }

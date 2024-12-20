@@ -1,18 +1,18 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { Expose, Exclude } from 'class-transformer'
 import { Optional } from '@nestjs/common'
-import { UserProvider, UserStatus } from '../../../../libraries/enum/user.enum'
+import { AccountProvider, AccountStatus } from '../../../../libraries/enum/account.enum'
 
 @Exclude()
-export class UserDto {
+export class AccountDto {
     @Expose()
     @ApiProperty()
-    userId: number
+    accountId: number
 
     @Expose()
     @Optional()
     @ApiProperty()
-    name: string
+    username: string
 
     @Expose()
     @Optional()
@@ -21,7 +21,7 @@ export class UserDto {
 
     @Expose()
     @ApiProperty()
-    status: UserStatus
+    status: AccountStatus
 
     @Expose()
     @Optional()
@@ -31,22 +31,10 @@ export class UserDto {
     @Expose()
     @Optional()
     @ApiProperty()
-	provider: UserProvider
+	provider: AccountProvider
 
     @Expose()
     @Optional()
     @ApiProperty()
 	providerId: string // ThirdParty ID
-
-    @Expose()
-    @ApiProperty()
-	token: string
-
-    @Expose()
-    @ApiProperty()
-	rememberToken: string
-
-    @Expose()
-    @ApiProperty()
-	tokenExpiredAt: Date
 }

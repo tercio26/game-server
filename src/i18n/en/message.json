@@ -11,5 +11,8 @@
     "login": {
         "invalid_email": "Email is invalid",
         "invalid_password": "Password is invalid."
+    },
+    "register": {
+        "email_exist": "Email already exists"
     }
 }

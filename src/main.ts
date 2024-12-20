@@ -39,7 +39,7 @@ async function bootstrap() {
 	const port = configService.get('server.port');
 	await app.listen(port);
 
-	Logger.log(`Port: ${port}, context path is ${context}`, 'Application started');
+	Logger.log(`Port: ${port}, context path is ${context}`, 'ApplicationStarted');
 }
 
 function configureOpenAPIDocument(app: INestApplication, context: any) {
