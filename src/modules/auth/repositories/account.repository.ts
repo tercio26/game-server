@@ -9,42 +9,51 @@ export class AccountRepository extends Repository<AccountEntity> {
     constructor(private dataSource: DataSource) {
         super(AccountEntity, dataSource.createEntityManager())
     }
-    
+
     getAccountByProvider(provider: AccountProvider, providerId: string): Promise<AccountEntity> {
         return this.findOne({ where: { provider, providerId } })
     }
 
     async registerLocalAccount(email: string, hashedPassword: string): Promise<AccountEntity> {
-        const account = this.create({
+        const data = this.create({
+            username: await this._generateUsername(),
+            status: AccountStatus.ACTIVE,
             provider: AccountProvider.LOCAL,
+
             email,
             password: hashedPassword,
-            username: await this._generateUsername(),
-            status: AccountStatus.ACTIVE,
         })
 
-        return this.save(account)
+        return this.save(data)
     }
 
-    async registerByProvider(request: LoginRequest): Promise<AccountEntity> {
-        const account = this.create({
-            provider: request.provider,
-            providerId: request.providerId,
-            email: request.email,
+    async registerByProvider(
+        provider: AccountProvider,
+        providerId: string,
+        email: string,
+        avatarPath?: string,
+    ): Promise<AccountEntity> {
+        const data = this.create({
             username: await this._generateUsername(),
-            avatarPath: request.avatarPath,
             status: AccountStatus.ACTIVE,
+
+            provider: provider,
+            providerId: providerId,
+            email: email,
+            avatarPath: avatarPath,
         })
 
-        return this.save(account)
+        return this.save(data)
     }
 
     async _generateUsername(): Promise<string> {
-        const lastId = await this.createQueryBuilder('u')
-            .select('MAX(account_id)', 'accountId')
-            .getRawOne().then(result => result.accountId) || 0
+        const lastId =
+            (await this.createQueryBuilder('u')
+                .select('MAX(account_id)', 'accountId')
+                .getRawOne()
+                .then(result => result.accountId)) || 0
         const id = parseInt(lastId) + 1
 
-        return `Dreamer${id.toString().padStart(8, '0')}`
+        return `dreamer${id.toString().padStart(8, '0')}`
     }
 }

@@ -39,6 +39,7 @@ export class CreateAccountTable1734428726646 implements MigrationInterface {
                     {
                         name: 'provider',
                         type: 'tinyint',
+                        comment: 'LOCAL=0, GOOGLE=1, FACEBOOK=2, APPlE=3',
                         unsigned: true,
                         isNullable: false,
                     },

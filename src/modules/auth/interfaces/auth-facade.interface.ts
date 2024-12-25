@@ -1,12 +1,12 @@
 import { LoginRequest } from '../dto/request/login.dto'
-import { LoginDto } from '../dto/response/login.dto'
-import { RegisterRequest } from '../dto/request/register.dto'
-import { AccountDto } from '../dto/response/account.dto'
+import { RegisterLocalRequest } from '../dto/request/register-local.dto'
+import { AccountDTO } from '../dto/response/account.dto'
+import { LoginDTO } from '../dto/response/login.dto';
 
 export const IAuthFacadeToken: string = 'IAuthFacade'
 
 export interface IAuthFacade {
-    register(request: RegisterRequest): Promise<AccountDto>
+    login(request: LoginRequest): Promise<LoginDTO>
 
-    login(credential: LoginRequest): Promise<LoginDto>
+    register(request: RegisterLocalRequest): Promise<AccountDTO>
 }

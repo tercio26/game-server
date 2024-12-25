@@ -1,14 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { Expose, Exclude } from 'class-transformer'
-import { AccountDto } from './account.dto'
+import { AccountDTO } from './account.dto'
 
 @Exclude()
-export class LoginDto {
+export class LoginDTO {
 	@Expose()
 	@ApiProperty()
 	accessToken: string
 
 	@Expose()
 	@ApiProperty()
-	accountInfo: AccountDto
+	accountInfo: AccountDTO
 }

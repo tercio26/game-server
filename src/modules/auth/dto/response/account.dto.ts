@@ -1,22 +1,22 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { Expose, Exclude } from 'class-transformer'
-import { Optional } from '@nestjs/common'
 import { AccountProvider, AccountStatus } from '../../../../libraries/enum/account.enum'
+import { IsOptional } from 'class-validator'
 
 @Exclude()
-export class AccountDto {
+export class AccountDTO {
     @Expose()
     @ApiProperty()
     accountId: number
 
     @Expose()
-    @Optional()
     @ApiProperty()
+    @IsOptional()
     username: string
 
     @Expose()
-    @Optional()
     @ApiProperty()
+    @IsOptional()
     email: string
 
     @Expose()
@@ -24,17 +24,17 @@ export class AccountDto {
     status: AccountStatus
 
     @Expose()
-    @Optional()
     @ApiProperty()
+    @IsOptional()
     avatarPath: string
 
     @Expose()
-    @Optional()
     @ApiProperty()
-	provider: AccountProvider
+    @IsOptional()
+    provider: AccountProvider
 
     @Expose()
-    @Optional()
     @ApiProperty()
-	providerId: string // ThirdParty ID
+    @IsOptional()
+    providerId: string // ThirdParty ID
 }

@@ -2,8 +2,6 @@ import { Module } from '@nestjs/common'
 import { PassportModule } from '@nestjs/passport'
 import { JwtModule } from '@nestjs/jwt'
 
-import { GoogleStrategy } from './strategies/google.strategy'
-import { FacebookStrategy } from './strategies/facebook.strategy'
 import { LocalStrategy } from './strategies/local.strategy'
 import { JwtStrategy } from './strategies/jwt.strategy'
 
@@ -34,8 +32,6 @@ import { AccountRepository } from './repositories/account.repository'
         I18nTranslateService,
         BcryptService,
 
-        GoogleStrategy,
-        FacebookStrategy,
         LocalStrategy,
         JwtStrategy,
 
@@ -47,5 +43,4 @@ import { AccountRepository } from './repositories/account.repository'
     ],
     controllers: [AuthController],
 })
-export class AuthModule {
-}
+export class AuthModule {}

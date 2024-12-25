@@ -1,18 +1,28 @@
 {
-    "invalid_data": "Invalid data",
-    "validation": {
-        "request": {
-            "empty": "Request should not be empty",
-            "invalid": "Invalid '{targetName}'"
-        },
-        "range_length": "'{targetName}' must be between {minLength} and {maxLength} characters.",
-        "required": "{targetName} is required"
+  "invalid_data": "Invalid data",
+  "login": {
+    "apple": {
+      "invalid_token": "Invalid Apple token"
     },
-    "login": {
-        "invalid_email": "Email is invalid",
-        "invalid_password": "Password is invalid."
+    "facebook": {
+      "invalid_token": "Invalid Facebook token"
     },
-    "register": {
-        "email_exist": "Email already exists"
+    "google": {
+      "invalid_token": "Invalid Google token"
+    },
+    "local": {
+      "invalid_credentials": "Email or password is incorrect"
     }
+  },
+  "register": {
+    "email_exist": "Email already exists"
+  },
+  "validation": {
+    "request": {
+      "empty": "Request should not be empty",
+      "invalid": "Invalid '{targetName}'"
+    },
+    "range_length": "'{targetName}' must be between {minLength} and {maxLength} characters.",
+    "required": "{targetName} is required"
+  }
 }

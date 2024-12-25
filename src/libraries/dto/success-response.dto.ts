@@ -8,6 +8,9 @@ export class SuccessResponse<T> {
     @ApiProperty({description: 'The data payload'})
     data: T
 
+    @ApiProperty({ description: 'The response message', required: false })
+    message: string
+
     @ApiProperty({description: 'Header'})
     headers?: string[]
 
@@ -19,9 +22,10 @@ export class SuccessResponse<T> {
         pagination?: Pagination
     }
 
-    constructor(data?: T, meta?: { pagination?: Pagination }) {
+    constructor(data?: T, message: string = null, meta?: { pagination?: Pagination }) {
         this.status = 'success'
         this.data = data
+        this.message = message
         this.meta = meta
     }
 }

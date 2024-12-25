@@ -7,19 +7,18 @@ export class ResponseFactory {
      * Create the success response with data
      *
      * @param data
+     * @param message
      * @returns
      */
-    static success<T>(data: T): SuccessResponse<T> {
-        return new SuccessResponse<T>(data)
+    static success<T>(data: T, message: string = null): SuccessResponse<T> {
+        return new SuccessResponse<T>(data, message)
     }
-
     /**
-     * Create the success response with data
+     * Create the success response with no data
      *
-     * @returns
      */
-    static successNoData<T>(): SuccessResponse<T> {
-        return new SuccessResponse<T>()
+    static successNoData<T>(message: string = null): SuccessResponse<T> {
+        return new SuccessResponse<T>(null, message)
     }
 
     /**
@@ -27,10 +26,11 @@ export class ResponseFactory {
      *
      * @param data
      * @param meta
+     * @param message
      * @returns
      */
-    static successWithMeta<T>(data: T, meta?: SuccessResponse<T>['meta']): SuccessResponse<T> {
-        return new SuccessResponse<T>(data, meta)
+    static successWithMeta<T>(data: T, meta?: SuccessResponse<T>['meta'], message: string = null): SuccessResponse<T> {
+        return new SuccessResponse<T>(data, message, meta)
     }
 
     /**
@@ -38,33 +38,11 @@ export class ResponseFactory {
      *
      * @param data
      * @param pagination
+     * @param message
      * @returns
      */
-    static successWithPagination<T>(data: T[], pagination: Pagination): SuccessResponse<T[]> {
-        return new SuccessResponse<T[]>(data, { pagination })
-    }
-
-    /**
-     * Create the success response with pagination
-     *
-     * @param data
-     * @param headers
-     * @param pagination
-     * @param width
-     * @returns
-     */
-    static successWithHeader<T>(
-        data: T[],
-        headers: string[],
-        pagination: Pagination,
-        width?: object,
-    ): SuccessResponse<T[]> {
-        return {
-            headers: headers,
-            data: data,
-            meta: { pagination },
-            width: width,
-        }
+    static successWithPagination<T>(data: T[], pagination: Pagination, message: string = null): SuccessResponse<T[]> {
+        return new SuccessResponse<T[]>(data, message, { pagination })
     }
 
     /**
@@ -76,7 +54,7 @@ export class ResponseFactory {
      * @param data
      * @returns
      */
-    static error<T>(code: string, message: string, errors: Record<string, string[]>, data?: T): ErrorResponse<T> {
+    static error<T>(code: string, message: string, errors: Record<string, string[]> = {}, data: T = null): ErrorResponse<T> {
         return new ErrorResponse<T>(code, message, errors, data)
     }
 }

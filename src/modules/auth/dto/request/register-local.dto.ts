@@ -2,7 +2,7 @@ import { IsString, IsNotEmpty, MinLength, MaxLength, IsEmail, IsBoolean } from '
 import { ExtLength } from '../../../../libraries/decorators/validation/length-validation.decorator'
 import { ApiProperty } from '@nestjs/swagger'
 
-export class RegisterRequest {
+export class RegisterLocalRequest {
     @ApiProperty()
     @ExtLength(1, 50)
     @IsNotEmpty()

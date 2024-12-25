@@ -1,32 +1,40 @@
 import { Column, DeleteDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm'
-import { AccountStatus, AccountProvider } from '../../../libraries/enum/account.enum'
 
-@Entity()
+@Entity('game')
 export class GameEntity {
-	@PrimaryGeneratedColumn({ name: 'game_id' })
-	gameId: number
+    @PrimaryGeneratedColumn({ name: 'game_id', type: 'bigint' })
+    gameId: number
 
-	@Column({ name: 'name' })
-	name: string
+    @Column({ name: 'name', type: 'varchar' })
+    name: string
 
-	@Column({ name: 'game_code' })
-	gameCode: string
+    @Column({ name: 'game_code', type: 'varchar' })
+    gameCode: string
 
-	@Column({ name: 'game_image', nullable: true })
-	gameImage: string
+    @Column({ name: 'game_image', type: 'varchar', nullable: true })
+    gameImage: string
 
-	@Column({ name: 'description', nullable: true })
-	description: string
+    @Column({ name: 'description', type: 'varchar', nullable: true })
+    description: string
 
-	@Column({ name: 'game_status' })
-	gameStatus: number
+    @Column({ name: 'game_status', type: 'tinyint' })
+    gameStatus: number
 
-	@Column({ type: 'datetime', name: 'created_at' })
-	createdAt: Date
+    @Column({ name: 'max_number_players', type: 'int' })
+    maxNumberPlayers: number
 
-	@Column({ type: 'datetime', name: 'updated_at' })
-	updatedAt: Date
+    @Column({ name: 'max_number_game_saves', type: 'int' })
+    maxNumberGameSaves: number
 
-	@DeleteDateColumn({ type: 'datetime', name: 'deleted_at' })
-	deletedAt: Date
+    @Column({ name: 'reset_time', type: 'time' })
+    resetTime: string
+
+    @Column({ name: 'created_at', type: 'datetime' })
+    createdAt?: Date
+
+    @Column({ name: 'updated_at', type: 'datetime' })
+    updatedAt?: Date
+
+    @DeleteDateColumn({ name: 'deleted_at', type: 'datetime' })
+    deletedAt?: Date
 }

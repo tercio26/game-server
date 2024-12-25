@@ -1,34 +1,34 @@
 import { Column, DeleteDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm'
 
-@Entity()
+@Entity('player')
 export class PlayerEntity {
-	@PrimaryGeneratedColumn({ name: 'player_id' })
-	playerId: number
+    @PrimaryGeneratedColumn({ name: 'player_id', type: 'bigint' })
+    playerId: number
 
-	@Column({ name: 'name' })
-	name: string
+    @Column({ name: 'name', type: 'varchar' })
+    name: string
 
-	@Column({ name: 'account_id' })
-	accountId: number
+    @Column({ name: 'account_id', type: 'bigint' })
+    accountId: number
 
-	@Column({ name: 'game_id' })
-	gameId: number
+    @Column({ name: 'game_id', type: 'bigint' })
+    gameId: number
 
-	@Column({ name: 'energy' })
-	energy: number
+    @Column({ name: 'energy', type: 'int' })
+    energy: number
 
-	@Column({ name: 'gold' })
-	gold: number
+    @Column({ name: 'gold', type: 'int' })
+    gold: number
 
-	@Column({ name: 'gems' })
-	gems: number
+    @Column({ name: 'gems', type: 'int' })
+    gems: number
 
-	@Column({ type: 'datetime', name: 'created_at' })
-	createdAt: Date
+    @Column({ name: 'created_at', type: 'datetime' })
+    createdAt?: Date
 
-	@Column({ type: 'datetime', name: 'updated_at' })
-	updatedAt: Date
+    @Column({ name: 'updated_at', type: 'datetime' })
+    updatedAt?: Date
 
-	@DeleteDateColumn({ type: 'datetime', name: 'deleted_at' })
-	deletedAt: Date
+    @DeleteDateColumn({ name: 'deleted_at', type: 'datetime' })
+    deletedAt?: Date
 }

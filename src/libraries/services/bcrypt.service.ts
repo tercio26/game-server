@@ -3,9 +3,8 @@ import {compare, genSalt, hash} from 'bcryptjs'
 
 @Injectable()
 export class BcryptService {
-    async hash(data: string): Promise<string> {
-        const salt = await genSalt()
-        return hash(data, salt)
+    hash(data: string): string {
+        return hash(data, genSalt())
     }
 
     compare(data: string, encrypted: string): boolean {

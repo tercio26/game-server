@@ -1,0 +1,12 @@
+# Bỏ qua node_modules và build
+node_modules/
+dist/
+build/
+
+# Bỏ qua các file tạm
+*.log
+*.tmp
+
+# Bỏ qua các thư mục cấu hình
+.vscode/
+.idea/

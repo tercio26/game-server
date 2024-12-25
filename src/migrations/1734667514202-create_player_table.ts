@@ -1,5 +1,5 @@
-import { MigrationInterface, QueryRunner, Table, TableForeignKey } from 'typeorm';
-import { AccountStatus } from '../libraries/enum/account.enum';
+import { MigrationInterface, QueryRunner, Table, TableForeignKey } from 'typeorm'
+import { AccountStatus } from '../libraries/enum/account.enum'
 
 export class CreatePlayerTable1734667514202 implements MigrationInterface {
 

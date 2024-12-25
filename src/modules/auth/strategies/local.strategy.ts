@@ -16,7 +16,7 @@ export class LocalStrategy extends PassportStrategy(Strategy, Guard.LOCAL) {
     constructor(
         @InjectRepository(AccountRepository) private userRepository: AccountRepository,
         private readonly bcryptService: BcryptService,
-        private readonly translateService: I18nTranslateService,
+        private readonly i18n: I18nTranslateService,
     ) {
         super({
             usernameField: 'email',
@@ -31,7 +31,6 @@ export class LocalStrategy extends PassportStrategy(Strategy, Guard.LOCAL) {
             return user
         }
 
-        const errorMessage = await this.translateService.translate('message.login.invalid_email')
-        throw new UnauthorizedException(errorMessage)
+        throw new UnauthorizedException(this.i18n.t('message.login.invalid_email'))
     }
 }

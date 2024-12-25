@@ -44,6 +44,24 @@ export class CreateGameTable1734667356351 implements MigrationInterface {
                         default: GameStatus.INACTIVE,
                     },
                     {
+                        name: 'max_number_players',
+                        type: 'int',
+                        unsigned: true,
+                        default: 1,
+                    },
+                    {
+                        name: 'max_number_game_saves',
+                        type: 'int',
+                        unsigned: true,
+                        default: 1,
+                    },
+                    {
+                        name: 'reset_time',
+                        type: 'time',
+                        isNullable: false,
+                        default: '00:00:00',
+                    },
+                    {
                         name: 'created_at',
                         type: 'datetime',
                         default: 'now()',

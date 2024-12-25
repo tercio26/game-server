@@ -1,20 +1,18 @@
 import { LoginRequest } from '../dto/request/login.dto'
-import { LoginDto } from '../dto/response/login.dto'
-import { AccountEntity } from '../entities/account.entity'
-import { RegisterRequest } from '../dto/request/register.dto'
+import { RegisterLocalRequest } from '../dto/request/register-local.dto'
+import { AccountDTO } from '../dto/response/account.dto'
+import { LoginDTO } from '../dto/response/login.dto'
 
 export const IAuthServiceToken: string = 'IAuthService'
 
 export interface IAuthService {
-    validateRegisterLocal(request: RegisterRequest): Promise<void>
+    loginByApple(request: LoginRequest): Promise<LoginDTO>
 
-    registerLocal(request: RegisterRequest): Promise<AccountEntity>
+    loginByFacebook(request: LoginRequest): Promise<LoginDTO>
 
-    loginGoogle(request: LoginRequest): Promise<LoginDto>
+    loginByGoogle(request: LoginRequest): Promise<LoginDTO>
 
-    loginFacebook(request: LoginRequest): Promise<LoginDto>
+    loginByLocalAccount(request: LoginRequest): Promise<LoginDTO>
 
-    loginApple(request: LoginRequest): Promise<LoginDto>
-
-    loginLocal(credential: LoginRequest): Promise<LoginDto>
+    registerLocalAccount(request: RegisterLocalRequest): Promise<AccountDTO>
 }
