@@ -1,0 +1,16 @@
+export enum ItemType {
+    GOLD = 1,
+    GEM = 2,
+    STAMINA = 3,
+    XP = 4,
+    HEAD_PIECE = 5,
+    ARMOR_PIECE = 6,
+    GLOVES_PIECE = 7,
+    WEAPON_PIECE = 8,
+    RING_PIECE = 9,
+    SCROLL_PIECE = 10,
+    NORMAL_KEY = 11,
+    RARE_KEY = 12,
+    EPIC_KEY = 13,
+    LEGENDARY_KEY = 14,
+}

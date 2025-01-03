@@ -19,11 +19,12 @@ export class CreateAccountTable1734428726646 implements MigrationInterface {
                     {
                         name: 'username',
                         type: 'varchar',
+                        length: '255',
                         isNullable: true,
                     },
                     {
-                        name: 'avatar_path',
-                        type: 'varchar',
+                        name: 'avatar',
+                        type: 'TEXT',
                         isNullable: true,
                     },
                     {
@@ -34,6 +35,7 @@ export class CreateAccountTable1734428726646 implements MigrationInterface {
                     {
                         name: 'password',
                         type: 'varchar',
+                        length: '255',
                         isNullable: true,
                     },
                     {
@@ -46,6 +48,7 @@ export class CreateAccountTable1734428726646 implements MigrationInterface {
                     {
                         name: 'provider_id',
                         type: 'varchar',
+                        length: '255',
                         isNullable: true,
                     },
                     {

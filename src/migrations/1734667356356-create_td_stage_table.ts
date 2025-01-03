@@ -1,20 +1,24 @@
-import { MigrationInterface, QueryRunner, Table } from 'typeorm'
-import { GameStatus } from '../libraries/enum/enums'
+import { MigrationInterface, QueryRunner, Table, TableForeignKey } from 'typeorm'
 
-export class CreateGameTable1734667356351 implements MigrationInterface {
+export class CreateTdStageTable1734667356356 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.createTable(
             new Table({
-                name: 'game',
+                name: 'td_stage',
                 columns: [
                     {
-                        name: 'game_id',
+                        name: 'td_stage_id',
                         type: 'bigint',
                         isPrimary: true,
                         unsigned: true,
                         generationStrategy: 'increment',
-                        isGenerated: true,
+                        isNullable: false,
+                    },
+                    {
+                        name: 'game_id',
+                        type: 'bigint',
+                        unsigned: true,
                         isNullable: false,
                     },
                     {
@@ -24,45 +28,16 @@ export class CreateGameTable1734667356351 implements MigrationInterface {
                         isNullable: false,
                     },
                     {
-                        name: 'game_code',
-                        type: 'varchar',
-                        length: '255',
-                        isNullable: false,
-                    },
-                    {
-                        name: 'image',
-                        type: 'TEXT',
-                        isNullable: true,
-                    },
-                    {
                         name: 'description',
                         type: 'varchar',
                         length: '255',
-                        isNullable: true,
-                    },
-                    {
-                        name: 'game_status',
-                        type: 'tinyint',
-                        unsigned: true,
-                        default: GameStatus.INACTIVE,
-                    },
-                    {
-                        name: 'max_number_players',
-                        type: 'int',
-                        unsigned: true,
-                        default: 1,
-                    },
-                    {
-                        name: 'max_number_game_saves',
-                        type: 'int',
-                        unsigned: true,
-                        default: 1,
-                    },
-                    {
-                        name: 'reset_time',
-                        type: 'time',
                         isNullable: false,
-                        default: '00:00:00',
+                    },
+                    {
+                        name: 'order',
+                        type: 'int',
+                        unsigned: true,
+                        isNullable: false,
                     },
                     {
                         name: 'created_at',
@@ -83,9 +58,21 @@ export class CreateGameTable1734667356351 implements MigrationInterface {
             }),
             true,
         )
+
+        await queryRunner.createForeignKey(
+            'td_enemy',
+            new TableForeignKey({
+                columnNames: ['game_id'],
+                referencedColumnNames: ['game_id'],
+                referencedTableName: 'game',
+                onDelete: 'CASCADE',
+                name: 'FK_td_stage_game_id',
+            }),
+        )
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.dropTable('game')
+        await queryRunner.dropForeignKey('td_stage', 'FK_td_stage_game_id')
+        await queryRunner.dropTable('td_stage')
     }
 }
